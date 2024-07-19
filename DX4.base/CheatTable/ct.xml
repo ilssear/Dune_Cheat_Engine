@@ -1,0 +1,53 @@
+<CheatTable CheatEngineTableVersion="45">
+  <CheatEntries>
+	<CheatEntry>
+	  <ID>1</ID>
+	  <Description>"ent.Structure:onSelect (nothing of interest, just shows some values in selected villages/buildings)"</Description>
+	  <VariableType>Auto Assembler Script</VariableType>
+	  <AssemblerScript>
+{
+  Game   : D4X.exe
+  Version: 
+  Date   : 2024-07-19
+  Author : ilssear
+  This script replaces Structure:onSelect
+  It exposes some of the information for your consumption
+}
+
+[ENABLE]
+{$C NODEBUG}
+#include &lt;ent.Structure..onSelect.c&gt;
+
+{$asm}
+alloc(newmem,$1000,40000000)
+
+newmem:
+  reg(ent_Structure_onSelect_patch)
+  align 10
+  hl_detour_method(ent.Structure:onSelect)
+
+[DISABLE]
+hl_restore_method(ent.Structure:onSelect)
+dealloc(newmem)
+unreg(*)
+
+{
+// ORIGINAL CODE - INJECTION POINT: 
+// ---------- INJECTING HERE ----------
+// ---------- DONE INJECTING  ----------
+}
+		
+</AssemblerScript>
+    </CheatEntry>
+  </CheatEntries>
+  <UserdefinedSymbols>
+    <SymbolEntry>
+      <Name>hlTypesBegin</Name>
+      <Address>13B46510098</Address>
+    </SymbolEntry>
+    <SymbolEntry>
+      <Name>ent_Faction_isAI</Name>
+      <Address>0</Address>
+    </SymbolEntry>
+  </UserdefinedSymbols>
+  </CheatTable>

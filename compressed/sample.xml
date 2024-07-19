@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CheatTable CheatEngineTableVersion="45">
+	<CheatEntries>
+		<CheatEntry>
+			<ID>96</ID>
+			<Description>&quot;COMMON (Activates/Deactivates all cheats)&quot;</Description>
+			<Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
+			<GroupHeader>1</GroupHeader>
+			<CheatEntries>
+				<CheatEntry>
+					<ID>122</ID>
+					<Description>&quot;ent.Faction:getCachedResNetProd (add static resources, i.e. water)&quot;</Description>
+					<VariableType>Auto Assembler Script</VariableType>
+					<AssemblerScript>
+  {
+    Game   : D4X.exe (paused)
+    Version: 
+    Date   : 2022-06-10
+    Author : doctor
+    This script does blah blah blah
+  }
+  [ENABLE]
+  {$C NODEBUG}
+  #include &lt;ent.Faction..getCachedResNetProd.c&gt;
+  {$asm}
+  alloc(newmem,$1000,$40000000)
+  newmem:
+  reg(ent_Faction_getCachedResNetProd_patch)
+  align 10
+  hl_detour_method(ent.Faction:getCachedResNetProd)
+  newmem+100:
+  hl_detour_method(ent.Faction:getCachedResProd)
+  [DISABLE]
+  hl_restore_method(ent.Faction:getCachedResNetProd)
+  hl_restore_method(ent.Faction:getCachedResProd)
+  dealloc(newmem)
+  {
+    // ORIGINAL CODE - INJECTION POINT: 76CA9F3C7190
+    // ---------- INJECTING HERE ----------
+    76CA9F3C7190: 55                    - push rbp
+    76CA9F3C7191: 48 8B EC              - mov rbp,rsp
+    76CA9F3C7194: 48 83 EC 30           - sub rsp,30
+    // ---------- DONE INJECTING  ----------
+    76CA9F3C7198: 48 89 4D 10           - mov [rbp+10],rcx
+    76CA9F3C719C: 89 55 18              - mov [rbp+18],edx
+    76CA9F3C719F: 48 8B 81 E0 02 00 00  - mov rax,[rcx+000002E0]
+    76CA9F3C71A6: 48 89 45 F0           - mov [rbp-10],rax
+    76CA9F3C71AA: 48 85 C0              - test rax,rax
+    76CA9F3C71AD: 75 1E                 - jne 76CA9F3C71CD
+    76CA9F3C71AF: 48 83 EC 08           - sub rsp,08
+    76CA9F3C71B3: 68 85 EF 59 F9        - push FFFFFFFFF959EF85
+  }
+					//
+          </AssemblerScript>
+				</CheatEntry>
+			</CheatEntries>
+        </CheatEntry>
+    </CheatEntries>
+</CheatTable>

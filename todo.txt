@@ -1,0 +1,31 @@
+
+
+
+
+ent.Unit:getSpeedModifier Not Woring, replace with:
+    extern double ent_Unit_getSpeed(ent_Unit* obj, void* arg1);
+    extern double ent_Unit_getSpeedFactor(ent_Unit* obj);
+    extern double ent_Unit_getAccelerationSpeed(ent_Unit* obj);
+	extern double ent_Unit_set_speedFactor(ent_Unit* obj, double arg1);
+
+
+ent.Refinery:getHarvestRate Not Woring, replace with:
+    extern double ent_Refinery_getProduction(ent_Refinery* obj);
+
+
+extern ent_Sandworm* ent_Unit___net_mark_targettedByWorm(ent_Unit* obj, ent_Sandworm* arg1);
+extern ent_Sandworm* ent_Unit_set_targettedByWorm(ent_Unit* obj, ent_Sandworm* arg1);
+extern bool ent_Sandworm_isInOuterRange(ent_Sandworm* obj, ent_Unit* arg1);
+
+
+extern double ent_Faction_get_maxHegemonyValue(ent_Faction* obj);
+extern int ent_Faction_set_currentHegemonyBonus(ent_Faction* obj, int arg1);
+extern ent_HegemonyData* ent_Faction_get_hegemonyData(ent_Faction* obj);
+
+
+
+ent.Faction:isTargettedByAssassination
+    extern bool ent_Faction_isTargettedByAssassination(ent_Faction* obj, ent_Faction* arg1);
+    extern bool ent_Faction_isTargettedByAssassinationInProgress(ent_Faction* obj);
+
+

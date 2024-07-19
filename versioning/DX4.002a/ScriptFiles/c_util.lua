@@ -3,7 +3,16 @@
 -- C code runner (for AA {$C})
 
 local thisClsName = "c_util"
+
 local Base = require "Class"
+
+if not log_dbg or not log_verbose or not log_info or not log_warn or not log_err then
+  log_dbg = log_dbg or function(fmt, ...) end
+  log_verbose = log_verbose or function(fmt, ...) end
+  log_info = log_info or function(fmt, ...) end
+  log_warn = log_warn or function(fmt, ...) end
+  log_err = log_err or function(fmt, ...) end
+end
 
 local function _cctor(C)
   --C.static.instances_mt.__mode = "" -- we don't want GC to collect registered instances

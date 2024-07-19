@@ -1,5 +1,14 @@
 -- Class.lua --
 
+
+if not log_dbg or not log_verbose or not log_info or not log_warn or not log_err then
+  log_dbg = log_dbg or function(fmt, ...) end
+  log_verbose = log_verbose or function(fmt, ...) end
+  log_info = log_info or function(fmt, ...) end
+  log_warn = log_warn or function(fmt, ...) end
+  log_err = log_err or function(fmt, ...) end
+end
+
 local instances_mode = "v"
 
 local next_instance_id = 1
@@ -37,7 +46,7 @@ end
 C.IsClass = IsClass
 
 local function CheckClass(cls, arg_name)
-  if not IsClass(cls) then errn(3, "%s: %s (%s) has to be a class", arg_name or "self", cls, type(cls)) end
+  if not IsClass(cls) then log_err("%s: %s (%s) has to be a class", arg_name or "self", cls, type(cls)) end
 end
 C.CheckClass = CheckClass
 
@@ -63,15 +72,15 @@ C.IsInstance = IsInstance
 
 local function CheckInstance(obj, arg_name)
   local is_obj, cls = IsInstance(obj)
-  if not is_obj then errn(3, "%s: %s (%s) has to be an instaance", arg_name or "self", obj, type(obj)) end
+  if not is_obj then log_err("%s: %s (%s) has to be an instance", arg_name or "self", obj, type(obj)) end
   return cls
 end
 C.CheckInstance = CheckInstance
 
 function C:Subclass(cls_name, cctor, ...)
   local base = self
-  if not IsClass(base) then errn(2, "<CLASS>:Subclass() missing arg0 (base)") end
-  if type(cls_name) ~= "string" then errn(2, "%s:Subclass() arg1 (cls_name) is %s, expected string", base.cls_name, type(cls_name)) end
+  if not IsClass(base) then log_err("<CLASS>:Subclass() missing arg0 (base)") end
+  if type(cls_name) ~= "string" then log_err("%s:Subclass() arg1 (cls_name) is %s, expected string", base.cls_name, type(cls_name)) end
 
   local static, hasOldInstances = Classes.static[cls_name], false
   if not static then
@@ -194,19 +203,19 @@ function C:ReaquireOldInstances()
     nInstances = nInstances + 1
   end
   if nInstances > 0 then
-    dbg("%s:ReaquireOldInstances(): %d", self.cls_name, nInstances)
+    log_dbg("%s:ReaquireOldInstances(): %d", self.cls_name, nInstances)
   end
 end
 
 function C:AcquireInstance(obj, force)
-  if not IsClass(self) then errn(2, "Must be called on class") end
-  if type(obj) ~= "table" then errn(2, "arg1 obj: %s (%s) not a table", obj, type(obj)) end
+  if not IsClass(self) then log_err("Must be called on class") end
+  if type(obj) ~= "table" then log_err("arg1 obj: %s (%s) not a table", obj, type(obj)) end
 
   local obj_mt, cls_name = rawget(self, "obj_mt"), rawget(self, "cls_name")
-  if (not obj_mt) or (not cls_name) then errn(2, "self is not a class. obj_mt: %s, cls_name: %s", obj_mt, cls_name) end
+  if (not obj_mt) or (not cls_name) then log_err("self is not a class. obj_mt: %s, cls_name: %s", obj_mt, cls_name) end
 
   if (not force) and obj.__cls_name and (obj.__cls_name ~= cls_name) then
-    errn("Class %s can't acquire instance of type %s", self.cls_name, obj.__cls_name)
+    log_err("Class %s can't acquire instance of type %s", self.cls_name, obj.__cls_name)
   end
 
   obj.__cls_name = cls_name
@@ -219,8 +228,8 @@ end
 
 function C:New(...)
   local cls = self
-  if not IsClass(cls) then errn(2, "Class:New(...) arg0 cls (%s) is not a class", type(cls)) end
-  if rawget(cls, "is_abstract") then errn(2, "Class:New(...) arg0 cls (%s) is marked as abstract") end
+  if not IsClass(cls) then log_err("Class:New(...) arg0 cls (%s) is not a class", type(cls)) end
+  if rawget(cls, "is_abstract") then log_err("Class:New(...) arg0 cls (%s) is marked as abstract") end
 
   local obj = {
     __cls_name = cls.cls_name,
@@ -228,13 +237,14 @@ function C:New(...)
   }
   setmetatable(obj, cls.obj_mt)
   obj:ctor(...)
+
   return obj
 end
 
 function C:Destroy(reason, ...)
   local obj = self
   local is_obj, cls = IsInstance(obj)
-  if not is_obj then errn(2, "<OBJ>:Destroy(...) arg0, obj (%s) is not an instance", type(obj)) end
+  if not is_obj then log_err("<OBJ>:Destroy(...) arg0, obj (%s) is not an instance", type(obj)) end
 
   local id = obj.__id
   obj:dtor(reason, ...)
@@ -248,24 +258,27 @@ end
 
 function C:DestroyByGC()
   if not self.static.__gc_silent then
-    printf("C:DestroyByGC(%s)", self)
-    printf("WARN: Instance %s of cls %s collected by GC before its :Destroy() was called.", self.__id or "", self.cls_name)
+    log_warn("C:DestroyByGC(%s)", self)
+    log_warn("Instance %s of cls %s collected by GC before its :Destroy() was called.", self.__id or "", self.cls_name)
   end
+
   self:Destroy("GC")
 end
 
 
 function C:DestroyInstances(reason)
-  if not IsClass(self) then errn(2, "Must be called on class") end
+  if not IsClass(self) then log_err("Must be called on class") end
+
   local instances = self.static.instances
   if not reason then reason = self.cls_name .. ":DestroyInstances" end
+
   for i = 1, 100000 do
     local k, v = next(instances)
     if not v then break end
     if i < 100 then
-      printf("%s:DestroyInstances(%s): %s", self.cls_name, reason, k)
+      log_verbose("%s:DestroyInstances(%s): %s", self.cls_name, reason, k)
     elseif i == 100 then
-      print(" ... and more")
+      log_verbose(" ... and more")
     end
     v:Destroy(reason)
   end
@@ -280,33 +293,35 @@ local allowed_instance_id_types = {
 function C:RegisterInstance(id, replace)
   local obj = self
   local is_obj, cls = IsInstance(obj)
-  if not is_obj then errn(2, "<OBJ>:RegisterInstance() arg0 (self, obj) got %s, expected an instance", cls, type(obj)) end
+  if not is_obj then log_err("<OBJ>:RegisterInstance() arg0 (self, obj) got %s, expected an instance", cls, type(obj)) end
   local instances = cls.static.instances
   if id then
-    if not allowed_instance_id_types[type(id)] then errn(2, "%s:RegisterInstance() arg1 (id) got %s, expected id", cls, type(id)) end
+    if not allowed_instance_id_types[type(id)] then log_err("%s:RegisterInstance() arg1 (id) got %s, expected id", cls, type(id)) end
     if (not replace) and instances[id] then
-      printf("WARN: Instance %s of cls %s is already registered and will be replaced by a new one", id, cls.cls_name)
+      log_warn("Instance %s of cls %s is already registered and will be replaced by a new one", id, cls.cls_name)
     end
   else
     while(instances[next_instance_id]) do next_instance_id = next_instance_id + 1 end
     id = next_instance_id
     next_instance_id = next_instance_id + 1
   end
+
   obj.__id = id
   instances[id] = obj
+
   return id
 end
 
 function C:FindInstance(id, no_err, silent)
   local cls = self
-  if not IsClass(cls) then errn(2, "<class>:FindInstance(id) arg0 self cls (%s) is not a class", type(cls)) end
+  if not IsClass(cls) then log_err("<class>:FindInstance(id) arg0 self cls (%s) is not a class", type(cls)) end
 
   if not id then
     local msg = format("%s:FindInstance(id) id is nil", cls.cls_name)
     if no_err then
-      printf("ERR: %s", msg)
+      log_warn("%s", msg)
     else
-      errn(2, msg)
+      log_err(msg)
     end
   end
 
@@ -315,9 +330,9 @@ function C:FindInstance(id, no_err, silent)
   if not obj then
     local msg = format("%s:FindInstance(id) instance with this id (%s) is not registered", cls.cls_name, id)
     if no_err then
-      if not silent then printf("WRN: %s", msg) end
+      if not silent then log_warn("%s", msg) end
     else
-      errn(2, msg)
+      log_err(msg)
     end
   end
   return obj
@@ -326,15 +341,15 @@ end
 function C:UnregisterInstance(no_err, silent)
   local obj = self
   local is_obj, cls = IsInstance(obj)
-  if not is_obj then errn(2, "<OBJ>:UnregisterInstance() arg0 (self, obj) got %s, expected an instance", cls, type(obj)) end
+  if not is_obj then log_err("<OBJ>:UnregisterInstance() arg0 (self, obj) got %s, expected an instance", cls, type(obj)) end
 
   local id = obj.__id
   if not id then
     local msg = format("%s:UnregisterInstance() instance is not registered (no __id is set)", cls.cls_name)
     if no_err then
-      if not silent then printf("WRN: %s", msg) end
+      if not silent then log_warn("%s", msg) end
     else
-      errn(2, msg)
+      log_err(2, msg)
     end
   end
 
@@ -344,11 +359,11 @@ function C:UnregisterInstance(no_err, silent)
   if instances[id] == obj then
     instances[id] = nil
   elseif instances[id] then
-    printf("WARN: %s:UnregisterInstance(): Instance %s was replaced by another one while registered", cls.cls_name, id)
+    log_warn("%s:UnregisterInstance(): Instance %s was replaced by another one while registered", cls.cls_name, id)
   else
-    printf("WARN: %s:UnregisterInstance(): Instance %s was removed from instances table while registered", cls.cls_name, id)
+    log_warn("%s:UnregisterInstance(): Instance %s was removed from instances table while registered", cls.cls_name, id)
   end
-  --print(debug.traceback())
+  -- log_verbose(debug.traceback())
 end
 
 function C:ctor()

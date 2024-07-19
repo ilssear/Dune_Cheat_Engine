@@ -123,7 +123,7 @@ local _hlCache = nil
 local function GetCache(forceClear)
   local pid = getOpenedProcessID()
   if (not pid or (pid == 0)) and not forceClear then
-    errn(2, "Game process not opened")
+    log_err("Game process not opened")
   end
 
   if not _hlCache or (_hlCache.pid ~= pid) or forceClear then
@@ -166,17 +166,17 @@ function C.FindMainTypeArray()
   -- try to find the types by LUA way
   local pBegin = C.FindTypesBeginLUA()
   if pBegin then
-    printf("LUA found the hlTypesBegin: 0x%012X", pBegin)
+    log_verbose("LUA found the hlTypesBegin: 0x%012X", pBegin)
   end
   if not pBegin or isDev then
     -- the simple LUA way failed to find the types array,
     -- we should try to find it the harder C way
     pBegin = C.FindTypesBeginC()
     if pBegin then
-      printf("C found the hlTypesBegin: 0x%012X", pBegin)
+      log_verbose("C found the hlTypesBegin: 0x%012X", pBegin)
     else
       -- we have a fatal problem - without types, we can't do anything
-      err("\n\nFATAL: Main game metadata (type array) not found\n\n")
+      log_err("FATAL: Main game metadata (type array) not found\n\n")
     end
   end
 
@@ -192,13 +192,13 @@ function C.FindTypesBeginLUA()
   -- enumMemoryRegions() : Returns an indexed table containing the memorylayout.
   --   Each entry consists out of: BaseAddress, AllocationBase, AllocationProtect, RegionSize, State, Protect, Type
   local all_regions = enumMemoryRegions()
-  --printf("regions = %s", serpent.block(regions))
+  -- log_verbose("regions = %s", serpent.block(regions))
   if not all_regions then return false, "No memory regions" end
-  printf("found %s memory regions", all_regions and #all_regions or nil)
+  log_info("found %s memory regions", all_regions and #all_regions or nil)
 
   -- walk through regions and examine them for type array presence
   for i, r in ipairs(all_regions) do
-    --printf("R: 0x%012X, S: 0x%08X", r.BaseAddress, r.RegionSize)
+    -- log_verbose("R: 0x%012X, S: 0x%08X", r.BaseAddress, r.RegionSize)
     if r.State == MEM_COMMIT and
        --r.BaseAddress == r.AllocationBase and
        r.AllocationProtect == PAGE_READWRITE and
@@ -292,26 +292,26 @@ end
 function C.FindTypesBeginC()
   local allocSize = 0x10000
   local addr = allocateMemory(allocSize)
-  if not addr then err("Can't allocate 0x%X bytes in the target process", allocSize) end
+  if not addr then log_err("Can't allocate 0x%X bytes in the target process", allocSize) end
 
   local cFileName = "FindTypes.c"
   local syms, msg, c_syms = CU.CompileCFiles({ cFileName }, true, addr)
-  if not syms then err("Can't compile %s: %s", cFileName, msg) end
+  if not syms then log_err("Can't compile %s: %s", cFileName, msg) end
 
   local fnName, resName = "hlFindTypes", "hlFindTypes_Result"
   local fnAddr, resAddr = c_syms[fnName], c_syms[resName]
   if not fnAddr then
-    printf("Can't retrieve symbol %s from compiled file %s", fnName, cFileName)
+    log_warn("Can't retrieve symbol %s from compiled file %s", fnName, cFileName)
     return nil
   end
-  if not resAddr then printf("Can't retrieve symbol %s from compiled file %s", resName, cFileName) end
+  if not resAddr then log_warn("Can't retrieve symbol %s from compiled file %s", resName, cFileName) end
 
   registerSymbol(fnName, fnAddr, true)
   registerSymbol(resName, resAddr, true)
 
-  printf("Executing %s (0x%012X)", fnName, fnAddr)
+  log_info("Executing %s (0x%012X)", fnName, fnAddr)
   local res = executeCode(fnAddr, 0, 30 * 1000)
-  printf("Returned from %s with result: 0x%012X", fnName, res or 0)
+  log_info("Returned from %s with result: 0x%012X", fnName, res or 0)
   if res > 0x10000 and (res < 0x7FFF00000000) then
     local r = {
       pBegin = readPointer(res + 0x00),
@@ -325,12 +325,12 @@ function C.FindTypesBeginC()
     }
     if r.pBegin and (r.pBegin > 0) then
       registerSymbol("hlTypesBegin", r.pBegin)
-      printf("registerSymbol(\"hlTypesBegin\", 0x%012X)", r.pBegin)
+      log_info("registerSymbol(\"hlTypesBegin\", 0x%012X)", r.pBegin)
     end
-    printf("%s = %s", resName, serpent.block(r, { numformat = "0x%012X" }))
+    log_verbose("%s = %s", resName, serpent.block(r, { numformat = "0x%012X" }))
     return r.pBegin
   else
-    print("%s (%s) failed to find type definitions: %s", fnName, cFileName, res)
+    log_warn("%s (%s) failed to find type definitions: %s", fnName, cFileName, res)
   end
 end
 
@@ -348,11 +348,11 @@ function C.CollectShortTypesFrom(pBegin)
     else
       if not ok then msg = t end
       -- err? we have probably reached the end of the hl_type array
-      printf("collected %d types\n - end of the hl_type array at 0x%012X reached: (%s)", #tar, pType, msg)
+      log_err("collected %d types\n - end of the hl_type array at 0x%012X reached: (%s)", #tar, pType, msg)
       return tar, pType, #tar
     end
   end
-  printf("WARNING! NOT reached the end of the hl_type array after %d items", maxCount)
+  log_warn("WARNING! NOT reached the end of the hl_type array after %d items", maxCount)
   return tar, pType, #tar
 end
 
@@ -436,7 +436,7 @@ function C.CacheShortTypes(tar, pBegin, pEnd)
     if pSuper then
       local s = by_pType[pSuper]
       t.super_type = s;
-      if not s then printf("WRN: super (0x%012X) not found for %s: %s (0x%012X)", pSuper, t.kind_name, t.name, t.pType) end
+      if not s then log_warn("super (0x%012X) not found for %s: %s (0x%012X)", pSuper, t.kind_name, t.name, t.pType) end
     end
   end
 
@@ -447,7 +447,7 @@ end
 
 function C.ParseType(pType)
   local kind, msg = C.ParseTypeKind(pType)
-  if not kind then errn(2, msg) end
+  if not kind then log_err(msg) end
   
   -- if kind is ok, the 2nd ret contains kind name
   local kind_name = msg
@@ -551,7 +551,7 @@ end
 
 function C.ParseObjTypeInheritanceNested(kind, kind_name, pType)
   if kind ~= hl_type_kind.HOBJ then
-    errn(2, "Type kind is not HOBJ (0x%02X), but %s (0x02X)", hl_type_kind.HOBJ, hl_type_kind_names[kind], kind)
+    log_err("Type kind is not HOBJ (0x%02X), but %s (0x02X)", hl_type_kind.HOBJ, hl_type_kind_names[kind], kind)
   end
 
   -- get hl_type_obj *obj
@@ -561,7 +561,7 @@ function C.ParseObjTypeInheritanceNested(kind, kind_name, pType)
   local pName = readPointer(tobj + 0x10)
   local name = readString(pName, 1024, true)
   if type(name) ~= "string" then
-    errn(2, "Unable to read hl_type_obj->name")
+    log_err("Unable to read hl_type_obj->name")
   end
   
   local pSuper = readPointer(tobj + 0x18)
@@ -653,7 +653,7 @@ function C.ParseObjTypeField(t, i, offset, pField)
   local pType = readPointer(pField + 0x08)
   local kind, msg = C.ParseTypeKind(pType)
   if not kind then
-    errn(4, msg)
+    log_err(msg)
   end
   local kind_name = msg
   local field_offset, pad = C.AlignOffsetForKind(offset, kind)
@@ -798,8 +798,5 @@ function C.ParseVirtualType(kind, kind_name, pType)
 
   return res
 end
-
-
-
 
 return C

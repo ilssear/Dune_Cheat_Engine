@@ -17,6 +17,7 @@ OUTPUT_XML_PATH = 'encoded_scripts.CT'
 FILES_ORDER_PATH = os.path.join(LUA_FILES_DIR, '_files_order.xml')
 SORT_METHOD = 'extension'  # Default sort method can be 'extension' or 'name'
 
+
 # Adapted character map for CE Base85
 ce_base85_char_map = dict(zip(
     '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!#$%()*+,-./:;=?@[]^_{}',

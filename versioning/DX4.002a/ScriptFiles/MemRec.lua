@@ -5,8 +5,15 @@
 -- uses global event handlers for memory records
 
 local thisClsName = "MemRec"
-
 local Base = require "Class"
+
+if not log_dbg or not log_verbose or not log_info or not log_warn or not log_err then
+  log_dbg = log_dbg or function(fmt, ...) end
+  log_verbose = log_verbose or function(fmt, ...) end
+  log_info = log_info or function(fmt, ...) end
+  log_warn = log_warn or function(fmt, ...) end
+  log_err = log_err or function(fmt, ...) end
+end
 
 require("defines" .. "")
 local serpent = require("serpent")

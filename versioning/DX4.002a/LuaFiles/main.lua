@@ -8,7 +8,7 @@ preload.LuaFilesPreload({"simple_logger"}, clearCachedLuaFiles)
 
 -- Load the simple_logger module in main
 logger = require("simple_logger")
-logger.setLevel(logger.levels.WARN) -- Default to ERROR logging (Other levels: ALL, DEBUG, INFO, WARN, ERROR)
+logger.setLevel(logger.levels.INFO) -- Default to ERROR logging (Other levels: ALL, DEBUG, INFO, WARN, ERROR)
 
 -- Create global aliases
 _G.log_dbg = logger.debug

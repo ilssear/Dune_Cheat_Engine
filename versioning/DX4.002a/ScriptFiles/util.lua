@@ -5,10 +5,18 @@ require(definesModuleName)
 
 require "err"
 
+if not log_dbg or not log_verbose or not log_info or not log_warn or not log_err then
+  log_dbg = log_dbg or function(fmt, ...) end
+  log_verbose = log_verbose or function(fmt, ...) end
+  log_info = log_info or function(fmt, ...) end
+  log_warn = log_warn or function(fmt, ...) end
+  log_err = log_err or function(fmt, ...) end
+end
+
 local format = string.format
 
 local  module_name = "util"
-log_dbg("begin CT LUA script %s", module_name)
+log_verbose("begin CT LUA script %s", module_name)
 
 local lfs = require("lfs".."")
 local preload = require("preload".."")
@@ -78,8 +86,6 @@ end
 function string:escape_pattern()
   return self:gsub("([^%w])", "%%%1")
 end
-
-
 
 local C = {
 }
@@ -193,10 +199,10 @@ local function DisassembleMinBytes(addr, minBytes)
     -->> splitDisassembledString(disassembledstring): Returns 4 strings. The address, bytes, opcode and extra field
     -->>>> BUT CE 7.4 returns them IN REVERSE ORDER
     local ex, op, bs, as = splitDisassembledString(ds);
-    --log_verbose("as: %s", as)
-    --log_verbose("bs: %s", bs)
-    --log_verbose("op: %s", op)
-    --log_verbose("ex: %s", ex)
+    log_dbg("as: %s", as)
+    log_dbg("bs: %s", bs)
+    log_dbg("op: %s", op)
+    log_dbg("ex: %s", ex)
 
     asmLines[#asmLines+1] = op
     bytesStrLines[#bytesStrLines+1] = bs
@@ -218,14 +224,17 @@ local function IsDir(path, desc)
   local mode, msg = lfs.attributes(path, "mode")
   if not mode or (mode ~= "directory") then
     if desc then
-      log_verbose("no %s (%s): %s", desc, path, msg or mode)
+      log_warn("no %s (%s): %s", desc, path, msg or mode)
     end
+
     return false, mode
   end
+
   if desc then
-    log_verbose("%s: \"%s\"", desc, path)
+    log_info("%s: \"%s\"", desc, path)
   end
-  --log_verbose("attrs: %s", serpent.line(ok))
+
+  log_verbose("attrs: %s", serpent.line(ok))
   return true, mode
 end
 C.IsDir = IsDir
@@ -345,6 +354,6 @@ end
 C.Dir = Dir
 
 
-log_dbg("end CT LUA script %s", module_name)
+log_verbose("end CT LUA script %s", module_name)
 
 return C

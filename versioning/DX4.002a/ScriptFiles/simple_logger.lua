@@ -15,8 +15,8 @@ simple_logger.levels = {
     NONE = 6
 }
 
--- Set default logging level to ERROR
-simple_logger.current_level = simple_logger.levels.ALL
+-- Set default logging level to WARN
+simple_logger.current_level = simple_logger.levels.WARN
 
 -- Set logging level
 function simple_logger.setLevel(level)

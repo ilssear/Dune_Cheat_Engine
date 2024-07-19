@@ -4,24 +4,26 @@ import os
 import zlib
 from lxml import etree
 import logging
-from ct_common import (ce_base85_char_map, reverse_ce_base85_char_map, decode_ce_base85, 
-                       encode_ce_base85, compress_and_encode_file_with_size, literal_opposite, 
-                       get_sorted_files, ensure_directory_exists)
 
 # Change the working directory to the directory where the script resides
 script_dir = os.path.dirname(os.path.abspath(__file__))
 os.chdir(script_dir)
+
+from ct_common import (ce_base85_char_map, reverse_ce_base85_char_map, decode_ce_base85, 
+                       encode_ce_base85, compress_and_encode_file_with_size, literal_opposite, 
+                       custom_sort_key,
+                       get_sorted_files, ensure_directory_exists)
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # Define paths for base and custom directories
 BASE_DIR = './DX4_base'
-CUSTOM_DIR = './DX4.001.R'
+CUSTOM_DIR = './DX4.002a'
 SCRIPT_FILES_DIR = 'ScriptFiles'
 LUA_FILES_DIR = 'LuaFiles'
-CT_XML_PATH = 'CheatTable'
-OUTPUT_XML_PATH = 'encoded_scripts.CT'
+CT_XML_DIR = 'CheatTable'
+OUTPUT_XML_PATH = 'DX4.002a.CT'
 FILES_ORDER_PATH = os.path.join(CUSTOM_DIR, LUA_FILES_DIR, '_files_order.xml')
 SORT_METHOD = 'extension'  # Default sort method can be 'extension' or 'name'
 
@@ -71,12 +73,12 @@ def add_cheat_table_content(root: etree.Element, base_dir: str, custom_dir: str)
         base_dir (str): Path to the base directory.
         custom_dir (str): Path to the custom directory.
     """
-    base_xml_files = [f for f in os.listdir(os.path.join(base_dir, CT_XML_PATH)) if f.endswith('.xml')]
-    custom_xml_files = [f for f in os.listdir(os.path.join(custom_dir, CT_XML_PATH)) if f.endswith('.xml')]
+    base_xml_files = [f for f in os.listdir(os.path.join(base_dir, CT_XML_DIR)) if f.endswith('.xml')]
+    custom_xml_files = [f for f in os.listdir(os.path.join(custom_dir, CT_XML_DIR)) if f.endswith('.xml')]
     all_xml_files = custom_xml_files + list(set(base_xml_files) - set(custom_xml_files))
 
     for file_name in all_xml_files:
-        file_path = os.path.join(custom_dir, CT_XML_PATH, file_name) if file_name in custom_xml_files else os.path.join(base_dir, CT_XML_PATH, file_name)
+        file_path = os.path.join(custom_dir, CT_XML_DIR, file_name) if file_name in custom_xml_files else os.path.join(base_dir, CT_XML_DIR, file_name)
         cheat_table_tree = etree.parse(file_path)
         cheat_table_root = cheat_table_tree.getroot()
         for elem in cheat_table_root:
@@ -188,8 +190,8 @@ def main() -> None:
     """Main function to create and validate encoded XML."""
     ensure_directory_exists(SCRIPT_FILES_DIR)
     ensure_directory_exists(LUA_FILES_DIR)
-    ensure_directory_exists(os.path.join(BASE_DIR, CT_XML_PATH))
-    ensure_directory_exists(os.path.join(CUSTOM_DIR, CT_XML_PATH))
+    ensure_directory_exists(os.path.join(BASE_DIR, CT_XML_DIR))
+    ensure_directory_exists(os.path.join(CUSTOM_DIR, CT_XML_DIR))
     
     create_encoded_xml(BASE_DIR, CUSTOM_DIR, OUTPUT_XML_PATH, SORT_METHOD)
     

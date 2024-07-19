@@ -1,23 +1,12 @@
-
 # Decoder for Cheat Engine v7.5 Cheat Tables
 
 import zlib
-import base64
 import os
 import xml.etree.ElementTree as ET
 from lxml import etree
 import logging
-
-# Constants
-OUTPUT_PATH = './ScriptFiles'
-LUA_PATH = './LuaFiles'
-CT_PATH = './CheatTable/ct.xml'
-TRAINER_XML_PATH = '../compressed/D4X.04.002.R.CT'
-FILES_ORDER = os.path.join(LUA_PATH, '_files_order.xml')
-CE_BASE85_CHAR_MAP = dict(zip(
-    '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!#$%()*+,-./:;=?@[]^_{}',
-    '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!#$%&()*+-;<=>?@^_`{|}~'
-))
+from ct_common import (OUTPUT_PATH, LUA_PATH, CT_PATH, TRAINER_XML_PATH, FILES_ORDER, 
+                       decode_ce_base85, ensure_directory_exists)
 
 # Change the working directory to the directory where the script resides
 script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -25,26 +14,6 @@ os.chdir(script_dir)
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-
-def ensure_directory_exists(path: str) -> None:
-    """Ensure the directory for the given path exists.
-
-    Args:
-        path (str): The directory path to check and create if it does not exist.
-    """
-    if not os.path.exists(path):
-        os.makedirs(path)
-
-def decode_ce_base85(data: str) -> bytes:
-    """Decode Cheat Engine Base85 encoded data.
-
-    Args:
-        data (str): Base85 encoded string.
-
-    Returns:
-        bytes: Decoded bytes.
-    """
-    return base64.b85decode(''.join(CE_BASE85_CHAR_MAP[v] for v in data))
 
 def process_trainer_xml(output_path: str, trainer_xml: ET.Element) -> None:
     """Process and save form files from the trainer XML.
@@ -138,4 +107,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

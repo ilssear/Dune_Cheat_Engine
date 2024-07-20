@@ -3,16 +3,16 @@
 #include <gen/t.ent.Unit.h>
 
 struct {
-  ent_Unit*     _this;					// 0x00 
-  ent_Faction*  _faction_ptr;			// 0x08
-  String*       _faction_kind; 			// 0x10
-  String*       _faction_get_leader;	// 0x18 
+  ent_Unit*     _this;                // 0x00 
+  ent_Faction*  _faction_ptr;         // 0x08
+  String*       _faction_kind; 			  // 0x10
+  String*       _faction_get_leader;  // 0x18 
   String*       _faction_getIdStr; 		// 0x20
-  String*       _unit_kind;				// 0x28
+  String*       _unit_kind;           // 0x28
   double        _unit_speedFactor;		// 0x30
-  int			_unit_maxLevel;			// 0x38
-  bool          _faction_isAI;			// 0x3C
-  bool          _canBeWormTarget;		// 0x3D
+  int           _unit_maxLevel;		  	// 0x38
+  bool          _faction_isAI;		  	// 0x3C
+  bool          _canBeWormTarget;	  	// 0x3D
 } ent_Unit_onSelect_dbg;
 
 #define dbg ent_Unit_onSelect_dbg

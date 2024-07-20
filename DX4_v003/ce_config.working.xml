@@ -6,7 +6,7 @@
         <base_files_dir>ScriptFiles</base_files_dir>
         <lua_files_dir>LuaFiles</lua_files_dir>
         <ct_xml_path>CheatTable</ct_xml_path>
-        <output_xml_path>DX4.003.debug.CT</output_xml_path>
+        <output_xml_path>DX4.003.CT</output_xml_path>
         <files_order_path>_files_order.xml</files_order_path>
         <custom_dir>./DX4.003</custom_dir>
         <custom_files_dirs>

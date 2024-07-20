@@ -80,9 +80,14 @@ def add_cheat_table_content(root: etree.Element, base_dir: str, custom_dir: str,
         custom_dir (str): Path to the custom directory.
         ct_xml_path (str): Path to the Cheat Table XML files.
     """
-    base_xml_files = [f for f in os.listdir(os.path.join(base_dir, ct_xml_path)) if f.endswith('.xml')]
+    
+    try:
+        base_xml_files = [f for f in os.listdir(os.path.join(base_dir, ct_xml_path)) if f.endswith('.xml')]
+    except:
+        base_xml_files = []
     custom_xml_files = [f for f in os.listdir(os.path.join(custom_dir, ct_xml_path)) if f.endswith('.xml')]
     all_xml_files = custom_xml_files + list(set(base_xml_files) - set(custom_xml_files))
+    print('all_xml_files: \n', all_xml_files)
 
     for file_name in all_xml_files:
         file_path = os.path.join(custom_dir, ct_xml_path, file_name) if file_name in custom_xml_files else os.path.join(base_dir, ct_xml_path, file_name)

@@ -348,11 +348,11 @@ function C.CollectShortTypesFrom(pBegin)
     else
       if not ok then msg = t end
       -- err? we have probably reached the end of the hl_type array
-      log_err("collected %d types\n - end of the hl_type array at 0x%012X reached: (%s)", #tar, pType, msg)
+      log_dbg("collected %d types\n - end of the hl_type array at 0x%012X reached: (%s)", #tar, pType, msg)
       return tar, pType, #tar
     end
   end
-  log_warn("WARNING! NOT reached the end of the hl_type array after %d items", maxCount)
+  log_warn("NOT reached the end of the hl_type array after %d items", maxCount)
   return tar, pType, #tar
 end
 

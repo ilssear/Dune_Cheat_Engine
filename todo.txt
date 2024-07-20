@@ -29,3 +29,42 @@ ent.Faction:isTargettedByAssassination
     extern bool ent_Faction_isTargettedByAssassinationInProgress(ent_Faction* obj);
 
 
+
+extern bool ent_Unit_canBeWormTarget(ent_Unit* obj, void* arg1);
+extern void ent_Unit_onSelect(ent_Unit* obj, void* arg1);
+extern bool ent_Unit_canRepair(ent_Unit* obj);
+
+extern double ent_Unit_getDailyLifeRegen(ent_Unit* obj);
+extern double ent_Unit_getSafeLifeRegen(ent_Unit* obj);
+extern double ent_Unit_getBaseSafeRegenLifeRatio(ent_Unit* obj);
+extern double ent_Unit_getSafeRegenLifeRatioModifier(ent_Unit* obj);
+extern double ent_Unit_getModifiedSafeRegenLifeRatio(ent_Unit* obj);
+extern double ent_Unit_getLifeRegenModifier(ent_Unit* obj);
+extern void ent_Unit_updateLife(ent_Unit* obj, double arg1);
+extern double ent_Unit_getBaseMaxLife(ent_Unit* obj);
+extern double ent_Unit_getBaseArmor(ent_Unit* obj);
+extern double ent_Unit_getMaxLifeAdditiveModifier(ent_Unit* obj);
+
+extern String* ent_Faction_get_leader(ent_Faction* obj);
+extern String* ent_Faction_getIdStr(ent_Faction* obj);
+ 
+extern bool ent_Faction_isTargettedByAssassination(ent_Faction* obj, ent_Faction* arg1);
+extern bool ent_Faction_isTargettedByAssassinationInProgress(ent_Faction* obj);
+
+extern bool ent_Faction_canBuildInMainBase(ent_Faction* obj);
+
+extern bool ent_Faction_hasChosenHero(ent_Faction* obj);
+extern bool ent_Faction_isAllowedToChooseHero(ent_Faction* obj);
+
+extern bool ent_Army_isVillageDefender(ent_Army* obj);
+
+
+t.ent.Refinery.h
+extern double ent_Refinery_getProduction(ent_Refinery* obj);
+extern ent_Faction* ent_Refinery_get_factionOwner(ent_Refinery* obj);
+
+#include <gen/t.ent.comp.HarvestComponent.c>
+#include <gen/t.ent.comp.EntityComponent.h>
+
+extern ent_Faction* ent_comp_EntityComponent_get_owner(ent_comp_EntityComponent* obj);
+extern double ent_comp_HarvestComponent_getSpiceProduction(ent_comp_HarvestComponent* obj);

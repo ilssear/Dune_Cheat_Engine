@@ -185,6 +185,7 @@ local function aa_detour_method(arg, syntaxcheckonly)
   local ma = m.pFunc
   local mSym = format("%s_%s", c.name, m.name):gsub("%.", "_")
   registerSymbol(mSym, ma, true)
+  log_info("Processing method %s:%s", c.name, m.name)
 
   local f4b = readInteger(ma)
   if f4b ~= 0xEC8B4855 then

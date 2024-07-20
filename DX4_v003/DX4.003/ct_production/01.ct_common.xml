@@ -1,0 +1,573 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CheatTable>
+  <CheatEntries>
+    <CheatEntry>
+      <ID>94</ID>
+      <Description>"COMMON (Toggle all cheats on/off)"</Description>
+      <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
+      <LastState Value="" RealAddress="00000000"/>
+      <GroupHeader>1</GroupHeader>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>38</ID>
+          <Description>"Combined Super Units"</Description>
+          <LastState/>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>{ Game   : D4X.exe
+  Version: 2.0.7.31918
+  Date   : 2024-07-18
+  Author : ilssear
+  This script turns player units into super units:
+  - Faster
+  - Stronger attack / defense
+  - Immmune to sandworm attack
+  - Faster life recovery
+  - Faster recon
+  - Faster unit recruitment
+  - Full supply for units
+}
+
+[ENABLE]
+{$C NODEBUG}
+#include &lt;ent.Unit..getSpeedFactor.c&gt;
+#include &lt;ent.Entity..hurtBy.c&gt;
+#include &lt;ent.Unit..canBeWormTarget.c&gt;
+#include &lt;ent.Unit..updateLife.c&gt;
+#include &lt;ent.Structure..addReconProgress.c&gt;
+#include &lt;ent.Structure..updateRecruitment.c&gt;
+#include &lt;ent.Army..get_supply.c&gt;
+
+
+{$asm}
+alloc(newmem_speed,$1000,$40000000)   // Allocate memory for the speed function patch
+alloc(newmem_hurtBy,$1000,$40000000)  // Allocate memory for the hurtBy function patch
+alloc(newmem_worm,$1000,$40000000)    // Allocate memory for the sandworm function patch
+alloc(newmem_life,$1000,$40000000)    // Allocate memory for the life function patch
+alloc(newmem_recon,$1000,$40000000)   // Allocate memory for the recon function patch
+alloc(newmem_recruit,$1000,$40000000) // Allocate memory for the recruitment function patch
+alloc(newmem_supply,$1000,$40000000)  // Allocate memory for the supply function patch
+
+newmem_speed:
+  reg(ent_Unit_getSpeedFactor_patch)  // Register the address for the speed factor patch
+  align 10                            // Align the code to a 16-byte boundary
+  hl_detour_method(ent.Unit:getSpeedFactor) // Detour from the original function to custom code
+
+newmem_hurtBy:
+  reg(ent_Entity_hurtBy_patch)        // Register the address for the hurtBy patch
+  align 10                            // Align the code to a 16-byte boundary
+  hl_detour_method(ent.Entity:hurtBy) // Detour from the original function to custom code
+
+newmem_worm:
+  reg(ent_Unit_canBeWormTarget_patch) // Register the address for the sandworm target patch
+  align 10                            // Align the code to a 16-byte boundary
+  hl_detour_method(ent.Unit:canBeWormTarget) // Detour from the original function to custom code
+
+newmem_life:
+  reg(ent_Unit_updateLife_patch)      // Register the address for the life update patch
+  align 10                            // Align the code to a 16-byte boundary
+  hl_detour_method(ent.Unit:updateLife) // Detour from the original function to custom code
+
+newmem_recon:
+  reg(ent_Structure_addReconProgress_patch) // Register the address for the recon progress patch
+  align 10
+  hl_detour_method(ent.Structure:addReconProgress)
+
+newmem_recruit:
+  reg(ent_Structure_updateRecruitment_patch) // Register the address for the recruitment patch
+  align 10
+  hl_detour_method(ent.Structure:updateRecruitment)
+
+newmem_supply:
+  reg(ent_Army_get_supply_patch)            // Register the address for the supply patch
+  align 10
+  hl_detour_method(ent.Army:get_supply)
+
+
+[DISABLE]
+hl_restore_method(ent.Unit:updateLife)      // Restore the original updateLife function
+hl_restore_method(ent.Unit:canBeWormTarget) // Restore the original canBeWormTarget function
+hl_restore_method(ent.Entity:hurtBy)        // Restore the original hurtBy function
+hl_restore_method(ent.Unit:getSpeedFactor)  // Restore the original speed factor function
+hl_restore_method(ent.Structure:addReconProgress) // Restore the original recon progress function
+hl_restore_method(ent.Structure:updateRecruitment) // Restore the original recruitment function
+hl_restore_method(ent.Army:get_supply)      // Restore the original supply function
+
+dealloc(newmem_speed)                  // Deallocate the memory block for the speed function patch
+dealloc(newmem_hurtBy)                 // Deallocate the memory block for the hurtBy function patch
+dealloc(newmem_worm)                   // Deallocate the memory block for the sandworm target patch
+dealloc(newmem_life)                   // Deallocate the memory block for the life update patch
+dealloc(newmem_recon)                  // Deallocate the memory block for the recon function patch
+dealloc(newmem_recruit)                // Deallocate the memory block for the recruitment function patch
+dealloc(newmem_supply)                 // Deallocate the memory block for the supply function patch
+
+
+unreg(ent_Unit_getSpeedFactor_patch)   // Unregister the speed factor patch label
+unreg(ent_Entity_hurtBy_patch)         // Unregister the hurtBy patch label
+unreg(ent_Unit_canBeWormTarget_patch)  // Unregister the sandworm target patch label
+unreg(ent_Unit_updateLife_patch)       // Unregister the life update patch label
+unreg(ent_Structure_addReconProgress_patch) // Unregister the recon progress patch label
+unreg(ent_Structure_updateRecruitment_patch) // Unregister the recruitment patch label
+unreg(ent_Army_get_supply_patch)       // Unregister the supply patch label
+
+
+</AssemblerScript>
+          <CheatEntries>
+            <CheatEntry>
+              <ID>39</ID>
+              <Description>"Damage"</Description>
+              <Options moHideChildren="1"/>
+              <LastState Value="" RealAddress="00000000"/>
+              <GroupHeader>1</GroupHeader>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>40</ID>
+                  <Description>"_player_units"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <VariableType>Double</VariableType>
+                  <Address>ent_Entity_hurtBy_data+00</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>41</ID>
+                  <Description>"_player_defender"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <VariableType>Double</VariableType>
+                  <Address>ent_Entity_hurtBy_data+08</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>42</ID>
+                  <Description>"_ai2village"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <VariableType>Double</VariableType>
+                  <Address>ent_Entity_hurtBy_data+10</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>43</ID>
+                  <Description>"_village2ai"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <VariableType>Double</VariableType>
+                  <Address>ent_Entity_hurtBy_data+18</Address>
+                </CheatEntry>
+              </CheatEntries>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>44</ID>
+              <Description>"Speed"</Description>
+              <Options moHideChildren="1"/>
+              <LastState Value="" RealAddress="00000000"/>
+              <GroupHeader>1</GroupHeader>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>45</ID>
+                  <Description>"_player_units"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <VariableType>Double</VariableType>
+                  <Address>ent_Entity_speedup_data+00</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>46</ID>
+                  <Description>"_player_ornithopters"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <VariableType>Double</VariableType>
+                  <Address>ent_Entity_speedup_data+08</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>47</ID>
+                  <Description>"_player_Harvesters"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <VariableType>Double</VariableType>
+                  <Address>ent_Entity_speedup_data+10</Address>
+                </CheatEntry>
+              </CheatEntries>
+            </CheatEntry>
+          </CheatEntries>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>73</ID>
+          <Description>"Combined Resources"</Description>
+          <LastState/>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>{ Game   : D4X.exe
+  Version: 2.0.7.31918
+  Date   : 2024-07-20
+  Author : ilssear
+  This script multiplies player resources
+}
+
+[ENABLE]
+{$C NODEBUG}
+#include &lt;ent.Faction..getCachedResNetProd.c&gt;
+#include &lt;ent.Faction..addRawResource.c&gt;
+
+{$asm}
+alloc(newmem_addRes,$1000,$40000000)
+alloc(newmem_rawRes,$1000,$40000000)
+
+newmem_addRes:
+  reg(ent_Faction_getCachedResNetProd_patch)
+  align 10
+  hl_detour_method(ent.Faction:getCachedResNetProd)
+
+newmem_rawRes:
+  reg(ent_Faction_addRawResource_patch)
+  align 10
+  hl_detour_method(ent.Faction:addRawResource)
+
+
+[DISABLE]
+hl_restore_method(ent.Faction:getCachedResNetProd)
+hl_restore_method(ent.Faction:addRawResource)
+
+unreg(ent_Faction_addRawResource_patch)
+unreg(ent_Faction_getCachedResNetProd_patch)
+
+dealloc(newmem_rawRes)
+dealloc(newmem_addRes)
+
+
+
+
+</AssemblerScript>
+          <CheatEntries>
+            <CheatEntry>
+              <ID>74</ID>
+              <Description>"Initialize (click to initialize)"</Description>
+              <LastState/>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>{
+  Game   : D4X.exe
+  Version: 2.0.7.31918
+  Date   : 2024-07-20
+  Author : ilssear
+  This script initializes the values for resources. Most of these change the increment,
+  except for Water and Fuel Cell, which change the actual value.
+
+  It uses the structure ent_Faction_getCachedResNetProd_data
+}
+[ENABLE]
+
+{$lua}
+local rc = {
+  [00] = { "Stockpile (spice) [no effect?]" },
+  [01] = { "Solari", 10000 },
+  [02] = { "Plascrete", 9999 },
+  [03] = { "Manpower", 10001 },
+  [04] = { "Fuel Cell", 10002 },
+  [05] = { "Water", 7000 },
+  [06] = { "Authority", 77777 },
+  [07] = { "Hegemony", 777 },
+  [08] = { "Landsraad Standing", 88888 },
+  [09] = { "Knowledge",100000  },
+  [10] = { "Influence", 10000 },
+  [12] = { "Votes", 10000 },
+  [13] = { "Command Points (Military)", 222 },
+  [14] = { "Military slots (max trainable troops)", 12 },
+  [18] = { "Spaceship parts (Fremen)", 7 },
+  [41] = { "Intel", 555 },
+}
+local plus = getAddress("ent_Faction_getCachedResNetProd_data+00")
+printf("[INFO] Initializer - Settings (pointer): 0x%012X", plus)
+local plusLen = 64
+for i = 0, plusLen - 1 do
+  local r = rc[i]
+  if not r then
+    r = { "?", i }
+  elseif not r[2] then
+    r[2] = 0
+  end
+  writeDouble(plus + 8 * i, r[2])
+end
+
+{$asm}
+
+
+[DISABLE]
+
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>91</ID>
+              <Description>"Reset (assign 0 as value)"</Description>
+              <LastState/>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>{
+  Game   : D4X.exe
+  Version: 2.0.7.31918
+  Date   : 2024-07-20
+  Author : ilssear
+  This script resets the values for resources.
+  It turns all added values to zero.
+  It uses the structure ent_Faction_getCachedResNetProd_data pointer
+  to find the memory address where the data starts
+}
+[ENABLE]
+
+{$lua}
+
+local plus = getAddress("ent_Faction_getCachedResNetProd_data+00")
+printf("[INFO] Reset - Settings (pointer): 0x%012X", plus)
+local plusLen = 320
+for i = 0, plusLen - 1 do
+  writeDouble(plus + 8 * i, 0)
+end
+
+{$asm}
+
+
+[DISABLE]
+
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>75</ID>
+              <Description>"Resource Settings (and current Values)"</Description>
+              <Options moHideChildren="1"/>
+              <LastState Value="" RealAddress="00000000"/>
+              <GroupHeader>1</GroupHeader>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>76</ID>
+                  <Description>"Solari"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <VariableType>Double</VariableType>
+                  <Address>ent_Faction_getCachedResNetProd_data+08</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>77</ID>
+                  <Description>"Plascrete"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <VariableType>Double</VariableType>
+                  <Address>ent_Faction_getCachedResNetProd_data+10</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>78</ID>
+                  <Description>"Manpower"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <VariableType>Double</VariableType>
+                  <Address>ent_Faction_getCachedResNetProd_data+18</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>79</ID>
+                  <Description>"Fuel Cell"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <VariableType>Double</VariableType>
+                  <Address>ent_Faction_getCachedResNetProd_data+20</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>80</ID>
+                  <Description>"Water"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <VariableType>Double</VariableType>
+                  <Address>ent_Faction_getCachedResNetProd_data+28</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>81</ID>
+                  <Description>"Authority"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <VariableType>Double</VariableType>
+                  <Address>ent_Faction_getCachedResNetProd_data+30</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>82</ID>
+                  <Description>"Hegemony"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <VariableType>Double</VariableType>
+                  <Address>ent_Faction_getCachedResNetProd_data+38</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>83</ID>
+                  <Description>"Landsraad Standing"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <VariableType>Double</VariableType>
+                  <Address>ent_Faction_getCachedResNetProd_data+40</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>84</ID>
+                  <Description>"Knowledge"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <VariableType>Double</VariableType>
+                  <Address>ent_Faction_getCachedResNetProd_data+48</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>85</ID>
+                  <Description>"Influence"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <VariableType>Double</VariableType>
+                  <Address>ent_Faction_getCachedResNetProd_data+50</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>86</ID>
+                  <Description>"Unknown"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <VariableType>Double</VariableType>
+                  <Address>ent_Faction_getCachedResNetProd_data+58</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>87</ID>
+                  <Description>"Votes"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <VariableType>Double</VariableType>
+                  <Address>ent_Faction_getCachedResNetProd_data+60</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>88</ID>
+                  <Description>"Command Points (limits military size)"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <VariableType>Double</VariableType>
+                  <Address>ent_Faction_getCachedResNetProd_data+68</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>89</ID>
+                  <Description>"Military slots (max trainable troops)"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <VariableType>Double</VariableType>
+                  <Address>ent_Faction_getCachedResNetProd_data+70</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>155</ID>
+                  <Description>"Spaceship Parts (Fremen only)"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <VariableType>Double</VariableType>
+                  <Address>ent_Faction_getCachedResNetProd_data+90</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>90</ID>
+                  <Description>"Intel"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <VariableType>Double</VariableType>
+                  <Address>ent_Faction_getCachedResNetProd_data+148</Address>
+                </CheatEntry>
+              </CheatEntries>
+            </CheatEntry>
+          </CheatEntries>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>93</ID>
+          <Description>"Building (fast construction)"</Description>
+          <LastState/>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>{ Game   : D4X.exe
+  Version: 2.0.7.31918
+  Date   : 2024-07-20
+  Author : ilssear
+  This script improves buildings:
+  - speeds up player building construction
+  - Increase refinery construction
+  - Increase harvester production (for Fremen)
+}
+
+[ENABLE]
+{$C NODEBUG}
+#include &lt;logic.Upgrades..regularUpdate.c&gt;
+#include &lt;ent.Refinery..getProduction.c&gt;
+#include &lt;ent.comp.HarvestComponent..getSpiceProduction.c&gt;
+
+
+{$asm}
+alloc(newmem_fast_build,$1000,$40000000)
+alloc(newmem_refinery,$1000,$40000000)
+alloc(newmem_harvester,$1000,$40000000)
+
+newmem_fast_build:
+  reg(logic_Upgrades_regularUpdate_patch)
+  align 10
+  hl_detour_method(logic.Upgrades:regularUpdate)
+
+newmem_refinery:
+  reg(ent_Refinery_getProduction_patch)
+  align 10
+  hl_detour_method(ent.Refinery:getProduction)
+
+newmem_harvester:
+  reg(ent_comp_HarvestComponent_getSpiceProduction)
+  align 10
+  hl_detour_method(ent.comp.HarvestComponent:getSpiceProduction)
+
+[DISABLE]
+hl_restore_method(logic.Upgrades:regularUpdate)
+hl_restore_method(ent.Refinery:getProduction)
+hl_restore_method(ent.comp.HarvestComponent:getSpiceProduction)
+
+unreg(ent_Refinery_getProduction_patch)
+unreg(logic_Upgrades_regularUpdate_patch)
+unreg(ent_comp_HarvestComponent_getSpiceProduction)
+
+dealloc(newmem_fast_build)
+dealloc(newmem_refinery)
+dealloc(newmem_harvester)
+
+
+</AssemblerScript>
+          <CheatEntries>
+            <CheatEntry>
+              <ID>154</ID>
+              <Description>"HarvesterSpiceMulitplier"</Description>
+              <ShowAsSigned>1</ShowAsSigned>
+              <VariableType>Double</VariableType>
+              <Address>spiceHarvestSettings+00</Address>
+            </CheatEntry>
+          </CheatEntries>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>96</ID>
+          <Description>"Hegemony (Increase base value)"</Description>
+          <LastState/>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>{ Game   : D4X.exe
+  Version: 2.0.7.31918
+  Date   : 2024-07-20
+  Author : ilssear
+  This script increases the player's base Hegemony
+}
+
+[ENABLE]
+{$C NODEBUG}
+#include &lt;ent.HegemonyData..setProd.c&gt;
+
+{$asm}
+alloc(newmem_Hegemony,$1000,$40000000)
+
+newmem_Hegemony:
+  reg(ent_HegemonyData_setProd_patch)
+  align 10
+  hl_detour_method(ent.HegemonyData:setProd)
+
+[DISABLE]
+hl_restore_method(ent.HegemonyData:setProd)
+unreg(ent_HegemonyData_setProd_patch)
+
+dealloc(newmem_Hegemony)
+
+
+
+
+</AssemblerScript>
+          <CheatEntries>
+            <CheatEntry>
+              <ID>99</ID>
+              <Description>"Hegemony Settings"</Description>
+              <Options moHideChildren="1"/>
+              <LastState Value="" RealAddress="00000000"/>
+              <GroupHeader>1</GroupHeader>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>97</ID>
+                  <Description>"_Hegemony_multiplier"</Description>
+                  <ShowAsSigned>1</ShowAsSigned>
+                  <VariableType>Double</VariableType>
+                  <Address>ent_HegemonyData_setProd_data+00</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>98</ID>
+                  <Description>"_Hegemony_addition"</Description>
+                  <ShowAsSigned>1</ShowAsSigned>
+                  <VariableType>Double</VariableType>
+                  <Address>ent_HegemonyData_setProd_data+08</Address>
+                </CheatEntry>
+              </CheatEntries>
+            </CheatEntry>
+          </CheatEntries>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+  </CheatEntries>
+</CheatTable>

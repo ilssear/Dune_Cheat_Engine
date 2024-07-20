@@ -123,7 +123,7 @@ local _hlCache = nil
 local function GetCache(forceClear)
   local pid = getOpenedProcessID()
   if (not pid or (pid == 0)) and not forceClear then
-    log_err("Game process not opened")
+    log_err("Game process not opened (hlType)")
   end
 
   if not _hlCache or (_hlCache.pid ~= pid) or forceClear then

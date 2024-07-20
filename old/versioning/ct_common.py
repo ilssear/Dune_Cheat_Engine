@@ -17,7 +17,6 @@ OUTPUT_XML_PATH = 'encoded_scripts.CT'
 FILES_ORDER_PATH = os.path.join(LUA_FILES_DIR, '_files_order.xml')
 SORT_METHOD = 'extension'  # Default sort method can be 'extension' or 'name'
 
-
 # Adapted character map for CE Base85
 ce_base85_char_map = dict(zip(
     '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!#$%()*+,-./:;=?@[]^_{}',
@@ -93,18 +92,21 @@ def literal_opposite(text: str) -> str:
     transformed = ''.join(opposite.get(char, char) for char in text)
     return transformed
 
-def custom_sort_key(file_name: str) -> tuple:
+
+def custom_sort_key(file_path: str) -> tuple:
     """Generate a custom sort key for a file name based on its extension.
 
     Args:
-        file_name (str): File name.
+        file_path (str): File path.
 
     Returns:
         tuple: A tuple containing the opposite extension and the file name.
     """
+    file_name = os.path.basename(file_path)
     name, ext = os.path.splitext(file_name)
     opposite_ext = literal_opposite(ext)
     return (opposite_ext, name.lower())
+
 
 def get_sorted_files(file_dir: str, sort_method: str) -> list:
     """Get a sorted list of files from a directory.

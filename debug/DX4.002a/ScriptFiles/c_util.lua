@@ -55,7 +55,7 @@ local _cCache = _G["_cCache" .. ""]
 local function GetCache(forceClear)
   local pid = getOpenedProcessID()
   
-  if (not pid or (pid == 0)) then log_err("Game process not opened") end -- allow cache w/o opened process
+  if (not pid or (pid == 0)) then log_err("Game process not opened (c_util)") end -- allow cache w/o opened process
   local cwd, isDev = U.GetWorkDir()
 
   if not _cCache or (_cCache.pid ~= pid) or forceClear then

@@ -44,7 +44,7 @@ preload.SetModuleResult(thisClsName, C)
 local _mrCache = _G["_mrCache" .. ""]
 local function GetCache(forceClear)
   local pid = getOpenedProcessID()
-  --if not pid or (pid == 0) then errn(2, "Game process not opened") end
+  --if not pid or (pid == 0) then log_err("Game process not opened (MemRec)") end
 
   if not _mrCache or (_mrCache.pid ~= pid) or forceClear then
     local old = _mrCache or {}

@@ -50,8 +50,8 @@ local sep2x = sep .. sep
 local _hlcgCache = _G["_hlcgCache" .. ""]
 local function GetCache(forceClear)
   local pid = getOpenedProcessID()
-  --if not pid or (pid == 0) then errn(2, "Game process not opened") end -- allow cache w/o opened process
-  if not pid or (pid == 0) then log_err("Game process not opened") end -- allow cache w/o opened process
+  --if not pid or (pid == 0) then log_err(2, "Game process not opened (hl_c_gen)") end -- allow cache w/o opened process
+  if not pid or (pid == 0) then log_err("Game process not opened (hl_c_gen)") end -- allow cache w/o opened process
 
   if not _hlcgCache or (_hlcgCache.pid ~= pid) or forceClear then
     local old = _hlcgCache or {}

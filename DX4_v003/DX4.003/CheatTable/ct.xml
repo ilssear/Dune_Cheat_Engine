@@ -1,0 +1,468 @@
+<CheatTable CheatEngineTableVersion="45">
+  <CheatEntries>
+    <CheatEntry>
+      <ID>375</ID>
+      <Description>"Unit:onSelect"</Description>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>{ Game   : D4X.exe
+  Version: 2.0.7.31918
+  Date   : 2024-07-18
+  Author : ilssear
+  This script gets info from the selected Unit
+}
+
+[ENABLE]
+{$C NODEBUG}
+#include &lt;ent.Unit..onSelect.c&gt;
+
+{$asm}
+alloc(newmem,$1000,40000000)
+
+newmem:
+  reg(ent_Unit_onSelect_patch)
+  align 10
+  hl_detour_method(ent.Unit:onSelect)
+
+[DISABLE]
+hl_restore_method(ent.Unit:onSelect)
+dealloc(newmem)
+
+unreg(*)
+
+
+</AssemblerScript>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>376</ID>
+          <Description>"dbg"</Description>
+          <Options moHideChildren="1"/>
+          <GroupHeader>1</GroupHeader>
+          <CheatEntries>
+            <CheatEntry>
+              <ID>377</ID>
+              <Description>"_this"</Description>
+              <ShowAsHex>1</ShowAsHex>
+              <ShowAsSigned>0</ShowAsSigned>
+              <VariableType>8 Bytes</VariableType>
+              <Address>ent_Unit_onSelect_dbg+00</Address>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>378</ID>
+              <Description>"_faction_ptr"</Description>
+              <ShowAsHex>1</ShowAsHex>
+              <ShowAsSigned>0</ShowAsSigned>
+              <VariableType>8 Bytes</VariableType>
+              <Address>ent_Unit_onSelect_dbg+08</Address>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>379</ID>
+              <Description>"_faction_kind"</Description>
+              <ShowAsSigned>0</ShowAsSigned>
+              <VariableType>String</VariableType>
+              <Length>20</Length>
+              <Unicode>0</Unicode>
+              <CodePage>0</CodePage>
+              <ZeroTerminate>1</ZeroTerminate>
+              <Address>ent_Unit_onSelect_dbg+10</Address>
+              <Offsets>
+                <Offset>0</Offset>
+              </Offsets>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>380</ID>
+              <Description>"_faction_leader"</Description>
+              <ShowAsSigned>0</ShowAsSigned>
+              <VariableType>String</VariableType>
+              <Length>20</Length>
+              <Unicode>0</Unicode>
+              <CodePage>0</CodePage>
+              <ZeroTerminate>1</ZeroTerminate>
+              <Address>ent_Unit_onSelect_dbg+18</Address>
+              <Offsets>
+                <Offset>0</Offset>
+              </Offsets>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>381</ID>
+              <Description>"_Faction_idStr"</Description>
+              <ShowAsSigned>0</ShowAsSigned>
+              <VariableType>String</VariableType>
+              <Length>20</Length>
+              <Unicode>0</Unicode>
+              <CodePage>0</CodePage>
+              <ZeroTerminate>1</ZeroTerminate>
+              <Address>ent_Unit_onSelect_dbg+20</Address>
+              <Offsets>
+                <Offset>0</Offset>
+              </Offsets>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>386</ID>
+              <Description>"_unit_kind"</Description>
+              <ShowAsSigned>0</ShowAsSigned>
+              <VariableType>String</VariableType>
+              <Length>20</Length>
+              <Unicode>0</Unicode>
+              <CodePage>0</CodePage>
+              <ZeroTerminate>1</ZeroTerminate>
+              <Address>ent_Unit_onSelect_dbg+28</Address>
+              <Offsets>
+                <Offset>0</Offset>
+              </Offsets>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>384</ID>
+              <Description>"_speedFactor"</Description>
+              <ShowAsSigned>0</ShowAsSigned>
+              <VariableType>Double</VariableType>
+              <Address>ent_Unit_onSelect_dbg+30</Address>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>385</ID>
+              <Description>"_maxLevel"</Description>
+              <ShowAsSigned>0</ShowAsSigned>
+              <VariableType>4 Bytes</VariableType>
+              <Address>ent_Unit_onSelect_dbg+38</Address>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>382</ID>
+              <Description>"_isAI"</Description>
+              <ShowAsSigned>0</ShowAsSigned>
+              <VariableType>Byte</VariableType>
+              <Address>ent_Unit_onSelect_dbg+3C</Address>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>383</ID>
+              <Description>"_canBeWormTarget"</Description>
+              <ShowAsSigned>0</ShowAsSigned>
+              <VariableType>Byte</VariableType>
+              <Address>ent_Unit_onSelect_dbg+3D</Address>
+            </CheatEntry>
+          </CheatEntries>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>387</ID>
+      <Description>"Unit:getSpeedFactor"</Description>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>{ Game   : D4X.exe
+  Version: 2.0.7.31918
+  Date   : 2024-07-18
+  Author : ilssear
+  This script changes the speed of your units:
+  - Harvester: stays the same
+  - Ornithopter: 5.0 x SpeedFactor
+  - All others: 10.0 x SpeedFactor
+}
+
+[ENABLE]
+{$C NODEBUG}
+#include &lt;ent.Unit..getSpeedFactor.c&gt;
+
+{$asm}
+alloc(newmem,$1000,40000000)
+
+newmem:
+  reg(ent_Unit_getSpeedFactor_patch)
+  align 10
+  hl_detour_method(ent.Unit:getSpeedFactor)
+
+[DISABLE]
+hl_restore_method(ent.Unit:getSpeedFactor)
+dealloc(newmem)
+
+unreg(*)
+
+
+</AssemblerScript>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>388</ID>
+          <Description>"dbg"</Description>
+          <Options moHideChildren="1"/>
+          <GroupHeader>1</GroupHeader>
+          <CheatEntries>
+            <CheatEntry>
+              <ID>389</ID>
+              <Description>"_this"</Description>
+              <ShowAsHex>1</ShowAsHex>
+              <ShowAsSigned>0</ShowAsSigned>
+              <VariableType>8 Bytes</VariableType>
+              <Address>ent_Unit_onSelect_dbg+00</Address>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>390</ID>
+              <Description>"_faction_ptr"</Description>
+              <ShowAsHex>1</ShowAsHex>
+              <ShowAsSigned>0</ShowAsSigned>
+              <VariableType>8 Bytes</VariableType>
+              <Address>ent_Unit_onSelect_dbg+08</Address>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>391</ID>
+              <Description>"_faction_kind"</Description>
+              <ShowAsSigned>0</ShowAsSigned>
+              <VariableType>String</VariableType>
+              <Length>20</Length>
+              <Unicode>0</Unicode>
+              <CodePage>0</CodePage>
+              <ZeroTerminate>1</ZeroTerminate>
+              <Address>ent_Unit_onSelect_dbg+10</Address>
+              <Offsets>
+                <Offset>0</Offset>
+              </Offsets>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>392</ID>
+              <Description>"_faction_leader"</Description>
+              <ShowAsSigned>0</ShowAsSigned>
+              <VariableType>String</VariableType>
+              <Length>20</Length>
+              <Unicode>0</Unicode>
+              <CodePage>0</CodePage>
+              <ZeroTerminate>1</ZeroTerminate>
+              <Address>ent_Unit_onSelect_dbg+18</Address>
+              <Offsets>
+                <Offset>0</Offset>
+              </Offsets>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>393</ID>
+              <Description>"_Faction_idStr"</Description>
+              <ShowAsSigned>0</ShowAsSigned>
+              <VariableType>String</VariableType>
+              <Length>20</Length>
+              <Unicode>0</Unicode>
+              <CodePage>0</CodePage>
+              <ZeroTerminate>1</ZeroTerminate>
+              <Address>ent_Unit_onSelect_dbg+20</Address>
+              <Offsets>
+                <Offset>0</Offset>
+              </Offsets>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>394</ID>
+              <Description>"_unit_kind"</Description>
+              <ShowAsSigned>0</ShowAsSigned>
+              <VariableType>String</VariableType>
+              <Length>20</Length>
+              <Unicode>0</Unicode>
+              <CodePage>0</CodePage>
+              <ZeroTerminate>1</ZeroTerminate>
+              <Address>ent_Unit_onSelect_dbg+28</Address>
+              <Offsets>
+                <Offset>0</Offset>
+              </Offsets>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>395</ID>
+              <Description>"_speedFactor"</Description>
+              <ShowAsSigned>0</ShowAsSigned>
+              <VariableType>Double</VariableType>
+              <Address>ent_Unit_onSelect_dbg+30</Address>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>396</ID>
+              <Description>"_maxLevel"</Description>
+              <ShowAsSigned>0</ShowAsSigned>
+              <VariableType>4 Bytes</VariableType>
+              <Address>ent_Unit_onSelect_dbg+38</Address>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>397</ID>
+              <Description>"_isAI"</Description>
+              <ShowAsSigned>0</ShowAsSigned>
+              <VariableType>Byte</VariableType>
+              <Address>ent_Unit_onSelect_dbg+3C</Address>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>398</ID>
+              <Description>"_canBeWormTarget"</Description>
+              <ShowAsSigned>0</ShowAsSigned>
+              <VariableType>Byte</VariableType>
+              <Address>ent_Unit_onSelect_dbg+3D</Address>
+            </CheatEntry>
+          </CheatEntries>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>399</ID>
+      <Description>"Unit:canBeWormTarget"</Description>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>{ Game   : D4X.exe
+  Version: 2.0.7.31918
+  Date   : 2024-07-18
+  Author : ilssear
+  This script prevents your units from being attacked by Sandworms
+}
+
+[ENABLE]
+{$C NODEBUG}
+#include &lt;ent.Unit..canBeWormTarget.c&gt;
+
+{$asm}
+alloc(newmem,$1000,40000000)
+
+newmem:
+  reg(ent_Unit_canBeWormTarget_patch)
+  align 10
+  hl_detour_method(ent.Unit:canBeWormTarget)
+
+[DISABLE]
+hl_restore_method(ent.Unit:canBeWormTarget)
+dealloc(newmem)
+
+unreg(*)
+
+
+</AssemblerScript>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>400</ID>
+          <Description>"dbg"</Description>
+          <Options moHideChildren="1"/>
+          <GroupHeader>1</GroupHeader>
+          <CheatEntries>
+            <CheatEntry>
+              <ID>401</ID>
+              <Description>"_this"</Description>
+              <ShowAsHex>1</ShowAsHex>
+              <ShowAsSigned>0</ShowAsSigned>
+              <VariableType>8 Bytes</VariableType>
+              <Address>ent_Unit_canBeWormTarget_dbg+00</Address>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>402</ID>
+              <Description>"_player"</Description>
+              <ShowAsHex>1</ShowAsHex>
+              <ShowAsSigned>0</ShowAsSigned>
+              <VariableType>8 Bytes</VariableType>
+              <Address>ent_Unit_canBeWormTarget_dbg+08</Address>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>411</ID>
+              <Description>"_ai"</Description>
+              <ShowAsHex>1</ShowAsHex>
+              <ShowAsSigned>0</ShowAsSigned>
+              <VariableType>8 Bytes</VariableType>
+              <Address>ent_Unit_canBeWormTarget_dbg+18</Address>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>410</ID>
+              <Description>"_canBeWormTarget"</Description>
+              <ShowAsSigned>0</ShowAsSigned>
+              <VariableType>Byte</VariableType>
+              <Address>ent_Unit_canBeWormTarget_dbg+18</Address>
+            </CheatEntry>
+          </CheatEntries>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>412</ID>
+      <Description>"Unit:updateLife"</Description>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>{ Game   : D4X.exe
+  Version: 2.0.7.31918
+  Date   : 2024-07-18
+  Author : ilssear
+  This script prevents your units from being attacked by Sandworms
+}
+
+[ENABLE]
+{$C NODEBUG}
+#include &lt;ent.Unit..updateLife.c&gt;
+
+{$asm}
+alloc(newmem,$1000,$40000000)
+
+newmem:
+  reg(ent_Unit_updateLife_patch)
+  align 10
+  hl_detour_method(ent.Unit:updateLife)
+
+[DISABLE]
+hl_restore_method(ent.Unit:updateLife)
+dealloc(newmem)
+
+unreg(*)
+
+
+</AssemblerScript>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>413</ID>
+          <Description>"dbg"</Description>
+          <Options moHideChildren="1"/>
+          <GroupHeader>1</GroupHeader>
+          <CheatEntries>
+            <CheatEntry>
+              <ID>414</ID>
+              <Description>"_this"</Description>
+              <ShowAsHex>1</ShowAsHex>
+              <ShowAsSigned>0</ShowAsSigned>
+              <VariableType>8 Bytes</VariableType>
+              <Address>ent_Unit_updateLife_dbg+00</Address>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>415</ID>
+              <Description>"_player"</Description>
+              <ShowAsHex>1</ShowAsHex>
+              <ShowAsSigned>0</ShowAsSigned>
+              <VariableType>8 Bytes</VariableType>
+              <Address>ent_Unit_updateLife_dbg+08</Address>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>416</ID>
+              <Description>"_ai"</Description>
+              <ShowAsHex>1</ShowAsHex>
+              <ShowAsSigned>0</ShowAsSigned>
+              <VariableType>8 Bytes</VariableType>
+              <Address>ent_Unit_updateLife_dbg+18</Address>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>417</ID>
+              <Description>"_arg1"</Description>
+              <ShowAsSigned>1</ShowAsSigned>
+              <VariableType>Double</VariableType>
+              <Address>ent_Unit_updateLife_dbg+18</Address>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>419</ID>
+              <Description>"_ret"</Description>
+              <ShowAsSigned>1</ShowAsSigned>
+              <VariableType>Double</VariableType>
+              <Address>ent_Unit_updateLife_dbg+20</Address>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>418</ID>
+              <Description>"_Max"</Description>
+              <ShowAsSigned>1</ShowAsSigned>
+              <VariableType>Double</VariableType>
+              <Address>ent_Unit_updateLife_dbg+28</Address>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>420</ID>
+              <Description>"_Add"</Description>
+              <ShowAsSigned>1</ShowAsSigned>
+              <VariableType>Double</VariableType>
+              <Address>ent_Unit_updateLife_dbg+30</Address>
+            </CheatEntry>
+          </CheatEntries>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+  </CheatEntries>
+  <UserdefinedSymbols>
+    <SymbolEntry>
+      <Name>Zero</Name>
+      <Address>0</Address>
+    </SymbolEntry>
+    <SymbolEntry>
+      <Name>One</Name>
+      <Address>1</Address>
+    </SymbolEntry>
+  </UserdefinedSymbols>
+  </CheatTable>

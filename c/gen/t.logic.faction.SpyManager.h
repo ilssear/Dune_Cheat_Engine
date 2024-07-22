@@ -1,4 +1,4 @@
-// gen time: 2024-07-14 16:36:15 UTC, pid: 0x000035FC (13820)
+// gen time: 2024-07-21 07:23:49 UTC, pid: 0x00005670 (22128)
 
 #ifndef __gen_t_logic_faction_SpyManager_h__
 #define __gen_t_logic_faction_SpyManager_h__
@@ -27,7 +27,7 @@ typedef struct logic_faction_CounterintelWeightGoal logic_faction_CounterintelWe
 typedef struct logic_faction_SpyManager logic_faction_SpyManager;
 
 
-// type: logic.faction.SpyManager, kind: HOBJ, pType: 0x01EC714D1758
+// type: logic.faction.SpyManager, kind: HOBJ, pType: 0x02A76E31E758
 struct logic_faction_SpyManager {
   // super: logic.faction.FactionManager
   logic_faction_FactionManager super;

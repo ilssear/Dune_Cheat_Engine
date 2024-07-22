@@ -22,7 +22,7 @@ typedef struct {
 /**
  * @brief Externally used data for damage factors.
  */
-data_damage ent_Entity_hurtBy_data = { 100.0, 0.01, 0.2, 2.0 };
+data_damage ent_Entity_hurtBy_data = { 100.0, 0.01, 1.0, 1.0 };
 #define data ent_Entity_hurtBy_data
 
 /**

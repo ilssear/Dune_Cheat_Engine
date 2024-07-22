@@ -2,6 +2,14 @@
 
 local clsName = "stop_watch"
 
+if not log_dbg or not log_verbose or not log_info or not log_warn or not log_err then
+  log_dbg = log_dbg or function(fmt, ...) end
+  log_verbose = log_verbose or function(fmt, ...) end
+  log_info = log_info or function(fmt, ...) end
+  log_warn = log_warn or function(fmt, ...) end
+  log_err = log_err or function(fmt, ...) end
+end
+
 local C = {
   cls_name = clsName,
   --started_at = 0,
@@ -21,8 +29,8 @@ function C:start()
 end
 
 function C:stop()
-  if not self then log_err(2, "No self! Call %s:stop() using ':'", clsName); end
-  if not self.started_at then errn(2, "%s not started. Call start() first", clsName); end
+  if not self then log_err("No self! Call %s:stop() using ':'", clsName); end
+  if not self.started_at then log_err("%s not started. Call start() first", clsName); end
   self.delta = (self.delta or 0) + (os.clock() - self.started_at);
 	self.started_at = nil
   return self.delta;

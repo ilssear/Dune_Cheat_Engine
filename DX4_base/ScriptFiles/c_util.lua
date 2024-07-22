@@ -3,7 +3,16 @@
 -- C code runner (for AA {$C})
 
 local thisClsName = "c_util"
+
 local Base = require "Class"
+
+if not log_dbg or not log_verbose or not log_info or not log_warn or not log_err then
+  log_dbg = log_dbg or function(fmt, ...) end
+  log_verbose = log_verbose or function(fmt, ...) end
+  log_info = log_info or function(fmt, ...) end
+  log_warn = log_warn or function(fmt, ...) end
+  log_err = log_err or function(fmt, ...) end
+end
 
 local function _cctor(C)
   --C.static.instances_mt.__mode = "" -- we don't want GC to collect registered instances
@@ -46,7 +55,7 @@ local _cCache = _G["_cCache" .. ""]
 local function GetCache(forceClear)
   local pid = getOpenedProcessID()
   
-  if (not pid or (pid == 0)) then log_err("Game process not opened") end -- allow cache w/o opened process
+  if (not pid or (pid == 0)) then log_err("Game process not opened (c_util)") end -- allow cache w/o opened process
   local cwd, isDev = U.GetWorkDir()
 
   if not _cCache or (_cCache.pid ~= pid) or forceClear then

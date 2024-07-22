@@ -1,12 +1,10 @@
 -- hlMain.lua
 
-dbg("hlMain begin")
+log_dbg("hlMain begin: loading hlType, hlUtil and hl")
 
 local hlType = require("hlType")
-
 local hlUtil = require("hlUtil")
-
 local hl = require("hl")
 
-dbg("hlMain end")
+log_dbg("hlMain end")
 

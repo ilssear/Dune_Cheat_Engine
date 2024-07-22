@@ -3,11 +3,9 @@
 require("defines".."")
 
 
-
-
 local function symLookup(sym)
   if sym:find("_org") then
-    printf("SYM LOOKUP: \"%s\"", sym)
+    log_info("SYM LOOKUP: \"%s\"", sym)
   end
   return nil
 end

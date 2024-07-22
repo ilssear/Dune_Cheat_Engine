@@ -21,28 +21,28 @@ typedef struct {
 ResourcePlusData ent_Faction_getCachedResNetProd_data = {
   {
     0,       // [000] - 0x00 - Stockpile spice (does nothing?)
-    10000,   // [001] - 0x08 - Solari
+    5000,   // [001] - 0x08 - Solari
     1000,    // [002] - 0x10 - Plascrete
-    10000,   // [003] - 0x18 - Manpower
+    100,   // [003] - 0x18 - Manpower
     1000,    // [004] - 0x20 - Fuel Cell
     1000,    // [005] - 0x28 - Water
-    10000,   // [006] - 0x30 - Authority
-    0,       // [007] - 0x38 - Hegemony
-    1000,    // [008] - 0x40 - Landsraad Standing
+    200,   // [006] - 0x30 - Authority
+    100,       // [007] - 0x38 - Hegemony
+    10000,    // [008] - 0x40 - Landsraad Standing
     100000,  // [009] - 0x48 - Knowledge
-    10000,   // [010] - 0x50 - Influence
+    50,   // [010] - 0x50 - Influence
     0,       // [011] - 0x58 - Unknown
     10000,   // [012] - 0x60 - Votes
     200,     // [013] - 0x68 - Command Points (limits military size)
-    13,      // [014] - 0x70 - Military slots (max trainable troops)
+    12,      // [014] - 0x70 - Military slots (max trainable troops)
     0,       // [015] - 0x78 - Unknown
     0, 0,    // [016]..[017] - 0x80..0x88 - Unknown
-    0,       // [018] - 0x90 - Spaceship Parts (Fremen only) 
+    10,       // [018] - 0x90 - Spaceship Parts (Fremen only) 
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // [019]..[031] - 0x98..0xF8 - Unknown
     0, 0, 0, 0, 0, 0, 0, 0, // [032]..[039] - 0x100..0x138 - Unknown
-    208,    // [040] - 0x140
-    555,    // [041] - 0x148 - Intel
-    210     // [042] - 0x150
+    40,    // [040] - 0x140 - Unkonwn
+    41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53,    // [041]..[053] - 0x148-0x1A8 - Unknown
+    100,     // [054] - 0x1B0 - Intel
   }
 };
 

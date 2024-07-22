@@ -1,7 +1,5 @@
 
-
 require("defines".."")
-
 
 local function symLookup(sym)
   if sym:find("_org") then

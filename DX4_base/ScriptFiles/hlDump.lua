@@ -6,6 +6,14 @@ local thisClsName = "hlDump"
 
 local Base = require "Class"
 
+if not log_dbg or not log_verbose or not log_info or not log_warn or not log_err then
+  log_dbg = log_dbg or function(fmt, ...) end
+  log_verbose = log_verbose or function(fmt, ...) end
+  log_info = log_info or function(fmt, ...) end
+  log_warn = log_warn or function(fmt, ...) end
+  log_err = log_err or function(fmt, ...) end
+end
+
 
 require("defines" .. "")
 local serpent = require("serpent")
@@ -39,7 +47,7 @@ function DumpParseType(pType)
     pType = hl.ResolveTypeName(pType)
   end
   local t = T.ParseType(pType)
-  printf("t = %s", serpent.block(t, { numformat = "0x%04X" }))
+  log_verbose("t = %s", serpent.block(t, { numformat = "0x%04X" }))
   return t
 end
 
@@ -90,7 +98,7 @@ function FindFunc(pFunc)
             mindex = i - 1,
             method_name = readString(pMethodName, 1024, true),
           }
-          printf("fn = %s", serpent.block(res, { numformat = "0x%04X" }))
+          log_verbose("fn = %s", serpent.block(res, { numformat = "0x%04X" }))
           return res
         end
       end
@@ -107,12 +115,13 @@ end
 
 function DumpMethod(mn)
   if type(mn) == "number" then FindFunc(mn) return end
+  
   local m, c, co = hl.ResolveMethod(mn)
   if m then
-    printf("%s = %s", mn, serpent.block(m, { numformat = "0x%04X" }))
-    printf("%s = 0x%012X", mn, m.pFunc)
+    log_verbose("%s = %s", mn, serpent.block(m, { numformat = "0x%04X" }))
+    log_info("%s = 0x%012X", mn, m.pFunc)
   else
-    printf("Method %s not found", mn)
+    log_err("Method %s not found", mn)
   end
 end
 

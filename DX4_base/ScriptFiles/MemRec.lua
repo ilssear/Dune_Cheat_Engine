@@ -5,8 +5,15 @@
 -- uses global event handlers for memory records
 
 local thisClsName = "MemRec"
-
 local Base = require "Class"
+
+if not log_dbg or not log_verbose or not log_info or not log_warn or not log_err then
+  log_dbg = log_dbg or function(fmt, ...) end
+  log_verbose = log_verbose or function(fmt, ...) end
+  log_info = log_info or function(fmt, ...) end
+  log_warn = log_warn or function(fmt, ...) end
+  log_err = log_err or function(fmt, ...) end
+end
 
 require("defines" .. "")
 local serpent = require("serpent")
@@ -37,7 +44,7 @@ preload.SetModuleResult(thisClsName, C)
 local _mrCache = _G["_mrCache" .. ""]
 local function GetCache(forceClear)
   local pid = getOpenedProcessID()
-  --if not pid or (pid == 0) then errn(2, "Game process not opened") end
+  --if not pid or (pid == 0) then log_err("Game process not opened (MemRec)") end
 
   if not _mrCache or (_mrCache.pid ~= pid) or forceClear then
     local old = _mrCache or {}

@@ -99,7 +99,6 @@ MEM_PHYSICAL    = 0x00400000
 MEM_TOP_DOWN    = 0x00100000
 MEM_WRITE_WATCH = 0x00200000
 
-
 -- virtual memory protection constants ( https://docs.microsoft.com/en-us/windows/win32/Memory/memory-protection-constants )
 PAGE_NOACCESS  = 0x01
 PAGE_READONLY  = 0x02

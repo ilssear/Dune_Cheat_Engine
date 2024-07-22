@@ -1,4 +1,4 @@
-
+// Like Northgard (same dev), it should be programmed in Haxe and compiled to hashlink
 
 
 

@@ -60,7 +60,6 @@ unreg(*)
                     <CheatEntry>
                       <ID>116</ID>
                       <Description>"_player_units"</Description>
-                      <LastState Value="100" RealAddress="3FFD6560"/>
                       <ShowAsSigned>0</ShowAsSigned>
                       <VariableType>Double</VariableType>
                       <Address>ent_Entity_hurtBy_data+00</Address>
@@ -68,7 +67,6 @@ unreg(*)
                     <CheatEntry>
                       <ID>117</ID>
                       <Description>"_player_defender"</Description>
-                      <LastState Value="0.001" RealAddress="3FFD6568"/>
                       <ShowAsSigned>0</ShowAsSigned>
                       <VariableType>Double</VariableType>
                       <Address>ent_Entity_hurtBy_data+08</Address>
@@ -76,7 +74,6 @@ unreg(*)
                     <CheatEntry>
                       <ID>118</ID>
                       <Description>"_ai2village"</Description>
-                      <LastState Value="0.2" RealAddress="3FFD6570"/>
                       <ShowAsSigned>0</ShowAsSigned>
                       <VariableType>Double</VariableType>
                       <Address>ent_Entity_hurtBy_data+10</Address>
@@ -84,7 +81,6 @@ unreg(*)
                     <CheatEntry>
                       <ID>119</ID>
                       <Description>"_village2ai"</Description>
-                      <LastState Value="0.01" RealAddress="3FFD6578"/>
                       <ShowAsSigned>0</ShowAsSigned>
                       <VariableType>Double</VariableType>
                       <Address>ent_Entity_hurtBy_data+18</Address>
@@ -207,7 +203,6 @@ unreg(*)
                     <CheatEntry>
                       <ID>124</ID>
                       <Description>"_player_units"</Description>
-                      <LastState Value="10" RealAddress="3FFD6540"/>
                       <ShowAsSigned>0</ShowAsSigned>
                       <VariableType>Double</VariableType>
                       <Address>ent_Entity_speedup_data+00</Address>
@@ -215,7 +210,6 @@ unreg(*)
                     <CheatEntry>
                       <ID>125</ID>
                       <Description>"_player_ornithopters"</Description>
-                      <LastState Value="5" RealAddress="3FFD6548"/>
                       <ShowAsSigned>0</ShowAsSigned>
                       <VariableType>Double</VariableType>
                       <Address>ent_Entity_speedup_data+08</Address>
@@ -223,7 +217,6 @@ unreg(*)
                     <CheatEntry>
                       <ID>126</ID>
                       <Description>"_player_Harvesters"</Description>
-                      <LastState Value="1" RealAddress="3FFD6550"/>
                       <ShowAsSigned>0</ShowAsSigned>
                       <VariableType>Double</VariableType>
                       <Address>ent_Entity_speedup_data+10</Address>
@@ -378,7 +371,7 @@ dealloc(newmem_addRes)
 </AssemblerScript>
               <CheatEntries>
                 <CheatEntry>
-                  <ID>132</ID>
+                  <ID>158</ID>
                   <Description>"Initialize (click to initialize)"</Description>
                   <LastState/>
                   <VariableType>Auto Assembler Script</VariableType>
@@ -395,23 +388,24 @@ dealloc(newmem_addRes)
 [ENABLE]
 
 {$lua}
+
 local rc = {
   [00] = { "Stockpile (spice) [no effect?]" },
   [01] = { "Solari", 10000 },
-  [02] = { "Plascrete", 9999 },
-  [03] = { "Manpower", 10001 },
-  [04] = { "Fuel Cell", 10002 },
+  [02] = { "Plascrete", 10000 },
+  [03] = { "Manpower", 1000 },
+  [04] = { "Fuel Cell", 7000 },
   [05] = { "Water", 7000 },
-  [06] = { "Authority", 77777 },
-  [07] = { "Hegemony", 777 },
-  [08] = { "Landsraad Standing", 88888 },
+  [06] = { "Authority", 500 },
+  [07] = { "Hegemony", 100 },
+  [08] = { "Landsraad Standing", 100000 },
   [09] = { "Knowledge",100000  },
-  [10] = { "Influence", 10000 },
+  [10] = { "Influence", 100 },
   [12] = { "Votes", 10000 },
-  [13] = { "Command Points (Military)", 222 },
+  [13] = { "Command Points (Military)", 200 },
   [14] = { "Military slots (max trainable troops)", 12 },
-  [18] = { "Spaceship parts (Fremen)", 7 },
-  [41] = { "Intel", 555 },
+  [18] = { "Spaceship parts (Fremen)", 100 },
+  [54] = { "Intel", 1000 },
 }
 local plus = getAddress("ent_Faction_getCachedResNetProd_data+00")
 printf("[INFO] Initializer - Settings (pointer): 0x%012X", plus)
@@ -572,11 +566,11 @@ end
                       <Address>ent_Faction_getCachedResNetProd_data+70</Address>
                     </CheatEntry>
                     <CheatEntry>
-                      <ID>148</ID>
+                      <ID>159</ID>
                       <Description>"Intel"</Description>
                       <ShowAsSigned>0</ShowAsSigned>
                       <VariableType>Double</VariableType>
-                      <Address>ent_Faction_getCachedResNetProd_data+148</Address>
+                      <Address>ent_Faction_getCachedResNetProd_data+1B0</Address>
                     </CheatEntry>
                   </CheatEntries>
                 </CheatEntry>
@@ -613,41 +607,6 @@ hl_restore_method(logic.Upgrades:regularUpdate)
 unreg(logic_Upgrades_regularUpdate_patch)
 
 dealloc(newmem_fastBuilding)
-
-
-
-
-</AssemblerScript>
-        </CheatEntry>
-        <CheatEntry>
-          <ID>150</ID>
-          <Description>"Refinery (More production for player refineries)"</Description>
-          <LastState/>
-          <VariableType>Auto Assembler Script</VariableType>
-          <AssemblerScript>{ Game   : D4X.exe
-  Version: 2.0.7.31918
-  Date   : 2024-07-20
-  Author : ilssear
-  This script increases refinery production for player
-}
-
-[ENABLE]
-{$C NODEBUG}
-#include &lt;ent.Refinery..getProduction.c&gt;
-
-{$asm}
-alloc(newmem_refinery,$1000,$40000000)
-
-newmem_refinery:
-  reg(ent_Refinery_getProduction_patch)
-  align 10
-  hl_detour_method(ent.Refinery:getProduction)
-
-[DISABLE]
-hl_restore_method(ent.Refinery:getProduction)
-unreg(ent_Refinery_getProduction_patch)
-
-dealloc(newmem_refinery)
 
 
 

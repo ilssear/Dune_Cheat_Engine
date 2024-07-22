@@ -1,4 +1,4 @@
-// gen time: 2024-07-14 16:36:47 UTC, pid: 0x000035FC (13820)
+// gen time: 2024-07-21 07:22:47 UTC, pid: 0x00005670 (22128)
 
 #ifndef __gen_t_logic_faction_Equipments_h__
 #define __gen_t_logic_faction_Equipments_h__
@@ -18,7 +18,7 @@ typedef struct hxbit_Serializer hxbit_Serializer;
 typedef struct logic_faction_Equipments logic_faction_Equipments;
 
 
-// type: logic.faction.Equipments, kind: HOBJ, pType: 0x01EC714D3EF8
+// type: logic.faction.Equipments, kind: HOBJ, pType: 0x02A76E320EF8
 struct logic_faction_Equipments {
   // super: logic.faction.FactionManager
   logic_faction_FactionManager super;

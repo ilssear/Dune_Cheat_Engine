@@ -2,14 +2,16 @@
 
 -- C code generator (for AA {$C})
 
-
-
 local thisClsName = "hl_c_gen"
-
 local Base = require "Class"
 
--- comment out the next line to allow more debug info output
-local function dbg(...) end
+if not log_dbg or not log_verbose or not log_info or not log_warn or not log_err then
+  log_dbg = log_dbg or function(fmt, ...) end
+  log_verbose = log_verbose or function(fmt, ...) end
+  log_info = log_info or function(fmt, ...) end
+  log_warn = log_warn or function(fmt, ...) end
+  log_err = log_err or function(fmt, ...) end
+end
 
 local function _cctor(C)
   --C.static.instances_mt.__mode = "" -- we don't want GC to collect registered instances
@@ -48,7 +50,8 @@ local sep2x = sep .. sep
 local _hlcgCache = _G["_hlcgCache" .. ""]
 local function GetCache(forceClear)
   local pid = getOpenedProcessID()
-  --if not pid or (pid == 0) then errn(2, "Game process not opened") end -- allow cache w/o opened process
+  --if not pid or (pid == 0) then log_err(2, "Game process not opened (hl_c_gen)") end -- allow cache w/o opened process
+  if not pid or (pid == 0) then log_err("Game process not opened (hl_c_gen)") end -- allow cache w/o opened process
 
   if not _hlcgCache or (_hlcgCache.pid ~= pid) or forceClear then
     local old = _hlcgCache or {}
@@ -90,6 +93,7 @@ C.GetClsGenFileName = GetClsGenFileName
 local function GetCType(pType, ctx)
   local isNew, byRef = false, true
   if not ctx then ctx = {} end
+
   local ct = ctx[pType]
   if not ct then
     local tn = T.ParseTypeName(pType)
@@ -103,6 +107,7 @@ local function GetCType(pType, ctx)
       byRef = false
     end
   end
+
   return ct, ctx, isNew, byRef
 end
 C.GetCType = GetCType
@@ -163,15 +168,19 @@ local function GenObjTypeFile(pType)
     if isNew then --and byRef then
       tds[#tds+1] = format("typedef struct %s %s;", ct, ct)
     end
+
     local fn, k, kn, tn = f.name, f.kind, f.kind_name, f.type_name
     if fn == "" then fn = format("%s_0x%04X", f.kind_name, f.offset) end
+
     local ln = format("  %-25s %s;", byRef and (ct .. "*") or ct, fn)
     ln = format("%-47s // +%04X", ln, f.offset)
     if k > hl_max_basic_type_kind then
       ln = format("%s: %s%s", ln, kn, tn and (" " .. tn) or "")
     end
+
     lns[#lns+1] = ln
   end
+
   lns[#lns+1] = format("  // total_size: 0x%04X", c.fields.total_size)
   lns[#lns+1] = format("}; // %s (%s)", cct, c.name)
   lns[#lns+1] = ""
@@ -185,12 +194,14 @@ local function GenObjTypeFile(pType)
 
   for _, m in ipairs(c.methods) do
     local ft, args = m.func_type, {}
+
     -- process method args
     for ai, at in ipairs(ft.arg_types) do
       ct, ctx, isNew, byRef = GetCType(at.pType, ctx)
       if isNew then --and byRef then
         tds[#tds+1] = format("typedef struct %s %s;", ct, ct)
       end
+
       local an = (ai == 1) and "obj" or format("arg%d", ai - 1)
       args[ai] = format("%s%s %s", ct, byRef and "*" or "", an)
     end
@@ -201,6 +212,7 @@ local function GenObjTypeFile(pType)
     if isNew then --and byRef then
       tds[#tds+1] = format("typedef struct %s %s;", ct, ct)
     end
+
     local rct = format("%s%s", ct, byRef and "*" or "")
 
     -- the C func name must be unique so it will have to contain type name and method name
@@ -231,6 +243,7 @@ local function GenObjTypeFile(pType)
     table.concat(post, "\n"),
   }
   local r = table.concat(rstrs, "\n")
+
   return r
 end
 C.GenObjTypeFile = GenObjTypeFile
@@ -242,7 +255,8 @@ local function GenTypeFile(tn)
   if k == hl_type_kind.HOBJ or k == hl_type_kind.HSTRUCT then
     return GenObjTypeFile(pType)
   end
-  err("Can't parse type (%s) of kind %s", tn, kn)
+
+  log_err("Can't parse type (%s) of kind %s", tn, kn)
 end
 C.GenTypeFile = GenTypeFile
 
@@ -252,15 +266,14 @@ local function GenFileCB(fn)
   local what, which = fn:match("^([t])%.(.+)%.h$")
   if what and which then
     if what == "t" then return GenTypeFile(which) end
-    err("Unrecognized gen file kind \"%s\" (in %s)", what, fn)
+    log_err("Unrecognized gen file kind \"%s\" (in %s)", what, fn)
   end
-  err("Unrecognized gen file name \"%s\"", fn)
+  log_err("Unrecognized gen file name \"%s\"", fn)
 end
+
 C.GenFileCB = GenFileCB
 -- register our C file generator
 CU._c_gens.hl_c_gen = GenFileCB
-
-
 
 return C
 
